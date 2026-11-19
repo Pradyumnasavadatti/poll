@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/Pradyumnasavadatti/poll/internals/store"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -15,6 +16,7 @@ type Config struct{
 type application struct{
 	Addr string
 	config *Config
+	store *store.Store
 }
 
 func (app *application) mux() chi.Router{
@@ -35,11 +37,11 @@ func (app *application) mux() chi.Router{
 
 func (app *application) run(mux chi.Router) error{
 	server := &http.Server{
-		Addr: app.Addr,
+		Addr: app.config.Addr,
 		Handler: mux,
 	}
 
-	fmt.Printf("ON: %s",app.Addr)
+	fmt.Printf("ON: %s",app.config.Addr)
 	err := server.ListenAndServe()
 
 	return err
